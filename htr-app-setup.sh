@@ -3,20 +3,21 @@
 # ----- Setup Ngrok -----
 
 # Start tmux session (-d: detach, -s: session name)
-# tmux new-session -d -s ngrok_session 'ngrok http 8080'
+tmux new-session -d -s ngrok_session 'ngrok http 8080'
 
-# # Wait for ngrok to start
-# sleep 10
+# Wait for ngrok to start
+sleep 10
 
 # Extract Forwarding Address / Expo URL
-# URL=$(curl -s http://127.0.0.1:4040/api/tunnels | jq -r '.tunnels[0].public_url')
-URL="TEST"
+URL=$(curl -s http://127.0.0.1:4040/api/tunnels | jq -r '.tunnels[0].public_url')
 
 
 # ----- Setup Environment Variables -----
 
 # Define the .env file path
-ENV_FILE="./.env"
+FILE_PATH="./.env"
+# Read the line containing 'ENV_FILE' and extract the path
+ENV_FILE=$(grep "ENV_FILE" $FILE_PATH | cut -d'=' -f2)
 
 # Create a temporary file
 TMP_FILE=$(mktemp)
