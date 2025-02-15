@@ -1,12 +1,31 @@
 #!/bin/bash
 
+# Save the current directory
+ORIGINAL_DIR=$(pwd)
+
 # ----- Setup Ngrok -----
 
 # Start tmux session (-d: detach, -s: session name)
-tmux new-session -d -s ngrok_session 'ngrok http 8080'
+tmux new-session -d -s ngrok_session 'ngrok http 4000'
+
+# Name of the tmux session
+SESSION_NAME="ngrok_session"
+
+# Check if the tmux session exists
+if tmux has-session -t $SESSION_NAME 2>/dev/null; then
+  echo "Session $SESSION_NAME already exists. Killing it..."
+  # Kill the existing tmux session
+  tmux kill-session -t $SESSION_NAME
+fi
+
+# Start tmux session (-d: detach, -s: session name)
+echo "Starting new tmux session with ngrok..."
+tmux new-session -d -s ngrok_session 'ngrok http 4000'
 
 # Wait for ngrok to start
 sleep 10
+
+echo "ngrok is now running in the tmux session $SESSION_NAME."
 
 # Extract Forwarding Address / Expo URL
 URL=$(curl -s http://127.0.0.1:4040/api/tunnels | jq -r '.tunnels[0].public_url')
@@ -54,3 +73,23 @@ mv $TMP_FILE $ENV_FILE
 
 
 echo "Updated EXPO_PUBLIC_BACKEND_URL to $URL in $ENV_FILE"
+
+
+
+# # ----- Start Expo -----
+FRONTEND=$(grep "FRONTEND" $FILE_PATH | cut -d'=' -f2)
+cd $FRONTEND
+code .
+cd $ORIGINAL_DIR
+
+# ----- Start Backend -----
+BACKEND=$(grep "BACKEND" $FILE_PATH | cut -d'=' -f2)
+cd $BACKEND
+echo $BACKEND
+code .
+cd $ORIGINAL_DIR
+
+# ----- Start Docker Database -----
+cd $ORIGINAL_DIR
+
+bash docker.sh
