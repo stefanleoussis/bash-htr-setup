@@ -92,4 +92,4 @@ cd $ORIGINAL_DIR
 # ----- Start Docker Database -----
 cd $ORIGINAL_DIR
 
-bash docker.sh
+#bash docker.sh
