@@ -79,14 +79,14 @@ echo "Updated EXPO_PUBLIC_BACKEND_URL to $URL in $ENV_FILE"
 # # ----- Start Expo -----
 FRONTEND=$(grep "FRONTEND" $FILE_PATH | cut -d'=' -f2)
 cd $FRONTEND
-code .
+cursor .
 cd $ORIGINAL_DIR
 
 # ----- Start Backend -----
 BACKEND=$(grep "BACKEND" $FILE_PATH | cut -d'=' -f2)
 cd $BACKEND
 echo $BACKEND
-code .
+cursor .
 cd $ORIGINAL_DIR
 
 # ----- Start Docker Database -----
